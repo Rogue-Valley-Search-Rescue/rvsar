@@ -1,78 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { MapPin, Mail, ArrowRight, Heart, Shield, Mountain, Menu, X, Users, Lock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Mail, ArrowRight, Heart, Shield, Mountain, Menu, X, Users } from 'lucide-react';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
-  const [authError, setAuthError] = useState(false);
 
   useEffect(() => {
-    // Check if user is already authenticated in this browser session/storage
-    const storedAuth = localStorage.getItem('rvsar_preview_auth');
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simple client-side check. Not secure against inspection, but stops casual browsing.
-    if (passwordInput === 'review2026') {
-      setIsAuthenticated(true);
-      localStorage.setItem('rvsar_preview_auth', 'true');
-      setAuthError(false);
-    } else {
-      setAuthError(true);
-      setPasswordInput('');
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-4 font-sans text-stone-800">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-stone-200 p-8 text-center">
-          <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl shadow-md mx-auto mb-6">
-            R
-          </div>
-          <h1 className="text-2xl font-bold text-emerald-950 mb-2">RVSAR Preview</h1>
-          <p className="text-stone-500 mb-8">Please enter the password to view the site draft.</p>
-          
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-stone-400" />
-                </div>
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border ${authError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-stone-300 focus:ring-emerald-500 focus:border-emerald-500'} rounded-xl leading-5 bg-stone-50 placeholder-stone-400 focus:outline-none focus:bg-white sm:text-sm transition-colors`}
-                  placeholder="Enter password"
-                  autoFocus
-                />
-              </div>
-              {authError && <p className="mt-2 text-sm text-red-600 text-left">Incorrect password. Please try again.</p>}
-            </div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
-            >
-              Access Site
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   const navLinks = [
     { name: 'About', href: '#about' },
