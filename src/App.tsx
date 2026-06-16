@@ -282,7 +282,7 @@ export default function App() {
             <div className="inline-block bg-emerald-900 border border-emerald-800 p-8 rounded-2xl max-w-2xl mx-auto">
               <h4 className="text-2xl font-bold text-white mb-4">Upcoming Recruitment</h4>
               <p className="text-stone-300 mb-6">
-                [Placeholder: Information about the next SAR Academy, application deadlines, and informational meetings will be posted here. Please check back later or contact us for more details.]
+                Please check back later or contact us for more details.
               </p>
               <a href="#contact" className="inline-flex items-center gap-2 text-orange-500 font-medium hover:text-orange-400 transition-colors">
                 Contact us for more info <ArrowRight size={16} />
