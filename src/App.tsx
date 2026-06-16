@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Mail, ArrowRight, Heart, Shield, Mountain, Menu, X, Users } from 'lucide-react';
 
+const DONATION_URL = 'https://b89282c8-8269-4aad-b5fc-204442ef6154.paylinks.godaddy.com/7c0ae106-de66-42c1-8872-6f7';
+
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,7 +19,7 @@ export default function App() {
     { name: 'About', href: '#about' },
     { name: 'CORSAR', href: '#corsar' },
     { name: 'Join', href: '#join' },
-    { name: 'Donate', href: '#donate' },
+    { name: 'Donate', href: DONATION_URL, target: '_blank', rel: 'noopener noreferrer' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -48,6 +50,8 @@ export default function App() {
                 <a
                   key={link.name}
                   href={link.href}
+                  target={link.target}
+                  rel={link.rel}
                   className={`text-sm font-medium hover:text-orange-500 transition-colors ${
                     isScrolled ? 'text-stone-300' : 'text-stone-100 drop-shadow-md'
                   }`}
@@ -56,7 +60,9 @@ export default function App() {
                 </a>
               ))}
               <a
-                href="#donate"
+                href={DONATION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-orange-600 hover:bg-orange-500 text-white px-5 py-2 rounded-full font-medium transition-colors shadow-md"
               >
                 Donate
@@ -83,6 +89,8 @@ export default function App() {
                 <a
                   key={link.name}
                   href={link.href}
+                  target={link.target}
+                  rel={link.rel}
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-emerald-900"
                 >
@@ -126,7 +134,9 @@ export default function App() {
               Learn More <ArrowRight size={20} />
             </a>
             <a
-              href="#donate"
+              href={DONATION_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-orange-600 hover:bg-orange-500 text-white px-8 py-4 rounded-full font-medium text-lg transition-colors shadow-lg flex items-center justify-center gap-2"
             >
               Support Our Mission <Heart size={20} />
@@ -295,7 +305,7 @@ export default function App() {
                 Your contribution directly supports our ability to respond quickly and effectively when someone is lost or injured in the Southern Oregon wilderness.
               </p>
               <a
-                href="https://b89282c8-8269-4aad-b5fc-204442ef6154.paylinks.godaddy.com/7c0ae106-de66-42c1-8872-6f7"
+                href={DONATION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-white text-orange-600 hover:bg-stone-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
@@ -363,7 +373,7 @@ export default function App() {
             <a href="#about" className="hover:text-white transition-colors text-sm">About</a>
             <a href="#corsar" className="hover:text-white transition-colors text-sm">CORSAR</a>
             <a href="#join" className="hover:text-white transition-colors text-sm">Join</a>
-            <a href="#donate" className="hover:text-white transition-colors text-sm">Donate</a>
+            <a href={DONATION_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-sm">Donate</a>
           </div>
         </div>
       </footer>
