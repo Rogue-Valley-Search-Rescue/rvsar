@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Mail, ArrowRight, Heart, Shield, Mountain, Menu, X, Users } from 'lucide-react';
+import { MapPin, Mail, Phone, ArrowRight, Heart, Shield, Mountain, Menu, X, Users } from 'lucide-react';
 
 const DONATION_URL = 'https://b89282c8-8269-4aad-b5fc-204442ef6154.paylinks.godaddy.com/7c0ae106-de66-42c1-8872-6f7';
 
@@ -329,19 +329,7 @@ export default function App() {
             <div className="w-20 h-1 bg-orange-600 mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 flex flex-col items-center text-center hover:shadow-md transition-shadow">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mb-6">
-                <MapPin size={32} />
-              </div>
-              <h3 className="text-xl font-bold text-emerald-950 mb-2">Headquarters</h3>
-              <p className="text-stone-600 text-lg">
-                Station 7<br />
-                620 Antelope Rd.<br />
-                White City, OR 97503
-              </p>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 flex flex-col items-center text-center hover:shadow-md transition-shadow">
               <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mb-6">
                 <Mail size={32} />
@@ -351,6 +339,33 @@ export default function App() {
                 <a href="mailto:jcrvsarboard@gmail.com" className="hover:text-orange-600 transition-colors">
                   jcrvsarboard@gmail.com
                 </a>
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 flex flex-col items-center text-center hover:shadow-md transition-shadow">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mb-6">
+                <Phone size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-emerald-950 mb-2">Call Us</h3>
+              <p className="text-stone-600 text-lg">
+                <a href="tel:+15418648830" className="hover:text-orange-600 transition-colors">
+                  541-864-8830
+                </a>
+              </p>
+              <p className="text-stone-500 text-sm mt-2">
+                For emergencies, call <strong>911</strong>
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 flex flex-col items-center text-center hover:shadow-md transition-shadow">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mb-6">
+                <MapPin size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-emerald-950 mb-2">Headquarters</h3>
+              <p className="text-stone-600 text-lg">
+                Station 7<br />
+                620 Antelope Rd.<br />
+                White City, OR 97503
               </p>
             </div>
           </div>
