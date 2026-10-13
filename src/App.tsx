@@ -284,8 +284,13 @@ export default function App() {
               <p className="text-stone-300 mb-6">
                 Visitors are welcome to our monthly meetings throughout the year to gauge interest before committing to the team. We accept one class of applicants per year, normally in the Spring.
               </p>
-              <a href="#contact" className="inline-flex items-center gap-2 text-orange-500 font-medium hover:text-orange-400 transition-colors">
-                Contact us for more info <ArrowRight size={16} />
+              <a
+                href="https://jacksoncountyor.rja.revize.com/forms/6567"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-orange-500 font-medium hover:text-orange-400 transition-colors"
+              >
+                Apply here <ArrowRight size={16} />
               </a>
             </div>
           </div>
