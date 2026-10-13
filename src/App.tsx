@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Mail, Phone, ArrowRight, Heart, Shield, Mountain, Menu, X, Users } from 'lucide-react';
 
-const DONATION_URL = 'https://b89282c8-8269-4aad-b5fc-204442ef6154.paylinks.godaddy.com/7c0ae106-de66-42c1-8872-6f7';
+const DONATION_URL = 'https://www.paypal.com/donate/?hosted_button_id=M2YHQQXBSQ25A';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
