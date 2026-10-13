@@ -282,7 +282,7 @@ export default function App() {
             <div className="inline-block bg-emerald-900 border border-emerald-800 p-8 rounded-2xl max-w-2xl mx-auto">
               <h4 className="text-2xl font-bold text-white mb-4">Upcoming Recruitment</h4>
               <p className="text-stone-300 mb-6">
-                Please check back later or contact us for more details.
+                Visitors are welcome to our monthly meetings throughout the year to gauge interest before committing to the team. We accept one class of applicants per year, normally in the Spring.
               </p>
               <a href="#contact" className="inline-flex items-center gap-2 text-orange-500 font-medium hover:text-orange-400 transition-colors">
                 Contact us for more info <ArrowRight size={16} />
