@@ -1,5 +1,21 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { ArrowLeft, Camera, CheckCircle2, Film, ImagePlus, Loader2, Lock, RotateCcw, ShieldCheck, Upload, X, XCircle } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Camera,
+  Check,
+  CheckCircle2,
+  Film,
+  ImagePlus,
+  Loader2,
+  Lock,
+  Plus,
+  RotateCcw,
+  ShieldCheck,
+  Upload,
+  X,
+  XCircle,
+} from 'lucide-react';
 
 // Google Apps Script web app URL (ends in /exec). Not a secret: the script
 // checks the password itself. See apps-script/README.md.
@@ -185,7 +201,8 @@ export default function UploadPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-10">
+      {/* Extra bottom space so mobile browser toolbars (e.g. Safari's floating bar) never cover the last control. */}
+      <main className="max-w-2xl mx-auto px-4 pt-10 pb-32">
         <div className="flex items-center gap-3 mb-2">
           <Camera className="text-orange-600" size={28} />
           <h1 className="text-3xl font-bold text-emerald-950">Share Team Photos &amp; Videos</h1>
@@ -322,8 +339,28 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
   };
 
   const toUpload = items.filter((i) => i.status === 'pending' || i.status === 'error');
-  const doneCount = items.filter((i) => i.status === 'done').length;
+  const doneItems = items.filter((i) => i.status === 'done');
+  const doneCount = doneItems.length;
+  const errorCount = items.filter((i) => i.status === 'error').length;
   const canSubmit = !busy && name.trim() && permission && toUpload.length > 0;
+  // Everything picked has uploaded (failed files were retried or removed): show the success screen.
+  const finished = !busy && doneCount > 0 && toUpload.length === 0;
+
+  const successRef = useRef<HTMLHeadingElement>(null);
+  const issuesRef = useRef<HTMLDivElement>(null);
+  const smoothScroll = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+  useEffect(() => {
+    if (!finished) return;
+    successRef.current?.scrollIntoView({ block: 'start', behavior: smoothScroll() });
+    successRef.current?.focus({ preventScroll: true });
+  }, [finished]);
+
+  // After a run with failures, bring the summary and Retry button into view.
+  useEffect(() => {
+    if (!busy && errorCount > 0) issuesRef.current?.scrollIntoView({ block: 'center', behavior: smoothScroll() });
+  }, [busy]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -351,9 +388,83 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
   };
 
   const clearDone = () => {
-    items.filter((i) => i.status === 'done').forEach((i) => i.preview && URL.revokeObjectURL(i.preview));
+    doneItems.forEach((i) => i.preview && URL.revokeObjectURL(i.preview));
     setItems((prev) => prev.filter((i) => i.status !== 'done'));
   };
+
+  const skipFailed = () => {
+    items.filter((i) => i.status === 'error').forEach(remove);
+  };
+
+  // Clear the finished batch and return to the form. Name and event are kept for the next batch.
+  const uploadMore = () => {
+    clearDone();
+    setRejected([]);
+  };
+
+  const fileInput = (
+    <input
+      ref={inputRef}
+      type="file"
+      accept="image/*,video/*,.heic,.heif,.mov,.m4v"
+      multiple
+      className="hidden"
+      onChange={(e) => addFiles(e.target.files)}
+    />
+  );
+
+  if (finished) {
+    const firstName = name.trim().split(/\s+/)[0];
+    const shown = doneItems.slice(0, 8);
+    return (
+      <section
+        role="status"
+        className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 sm:p-10 flex flex-col items-center text-center gap-5"
+      >
+        <div className="w-16 h-16 rounded-full border-4 border-emerald-800 flex items-center justify-center">
+          <Check size={36} strokeWidth={3} className="text-emerald-800" />
+        </div>
+        <div>
+          <h2 ref={successRef} tabIndex={-1} className="scroll-mt-6 text-2xl font-bold text-emerald-950 focus:outline-none">
+            Thank you{firstName ? `, ${firstName}` : ''}!
+          </h2>
+          <p className="mt-1 text-stone-700">
+            {doneCount} file{doneCount === 1 ? '' : 's'} uploaded
+            {event.trim() ? <> for <strong>{event.trim()}</strong></> : null}.
+          </p>
+        </div>
+        <ul className="flex flex-wrap justify-center gap-2" aria-label="Uploaded files">
+          {shown.map((item) => (
+            <li key={item.id} className="w-16 h-16 rounded-lg bg-stone-100 overflow-hidden flex items-center justify-center">
+              {item.preview ? (
+                <img src={item.preview} alt={item.file.name} className="w-full h-full object-cover" />
+              ) : item.mimeType.startsWith('video/') ? (
+                <Film size={22} className="text-stone-400" aria-label={item.file.name} />
+              ) : (
+                <Camera size={22} className="text-stone-400" aria-label={item.file.name} />
+              )}
+            </li>
+          ))}
+          {doneCount > shown.length && (
+            <li className="w-16 h-16 rounded-lg bg-stone-100 flex items-center justify-center text-sm font-medium text-stone-600">
+              +{doneCount - shown.length}
+            </li>
+          )}
+        </ul>
+        <button
+          type="button"
+          onClick={uploadMore}
+          className="w-full sm:w-auto sm:px-10 bg-orange-600 hover:bg-orange-500 text-white py-3 rounded-full font-medium transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus size={18} /> Upload more photos
+        </button>
+        <a href="/" className="text-sm text-stone-600 underline hover:text-emerald-800">
+          Back to the main site
+        </a>
+        {fileInput}
+      </section>
+    );
+  }
 
   return (
     <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 sm:p-8 space-y-6">
@@ -396,14 +507,7 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
           <span className="font-medium">Choose photos or videos</span>
           <span className="text-xs text-stone-500">Photos: JPEG, PNG, HEIC, WebP · Videos: MP4, MOV, WebM · up to 2 GB each</span>
         </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*,video/*,.heic,.heif,.mov,.m4v"
-          multiple
-          className="hidden"
-          onChange={(e) => addFiles(e.target.files)}
-        />
+        {fileInput}
         {rejected.length > 0 && (
           <ul className="mt-2 text-sm text-red-700 space-y-1">
             {rejected.map((r) => <li key={r}>{r}</li>)}
@@ -485,6 +589,31 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
         </span>
       </label>
 
+      {!busy && errorCount > 0 && (
+        <div
+          ref={issuesRef}
+          role="status"
+          className="rounded-xl border-2 border-amber-500 bg-amber-50 p-4 text-sm text-stone-900 flex items-start gap-3"
+        >
+          <AlertTriangle size={20} className="mt-0.5 flex-shrink-0 text-amber-700" />
+          <div className="flex-1">
+            <p className="font-semibold">
+              {doneCount > 0
+                ? `${doneCount} of ${doneCount + errorCount} files uploaded. ${errorCount} didn't upload.`
+                : `${errorCount} file${errorCount === 1 ? '' : 's'} didn't upload.`}
+            </p>
+            <p className="mt-1 text-stone-700">
+              Tap Retry, or remove the files marked <XCircle size={14} className="inline -mt-0.5" aria-label="failed" />.
+            </p>
+            {doneCount > 0 && (
+              <button type="button" onClick={skipFailed} className="mt-2 font-medium underline hover:text-emerald-800">
+                Skip failed files and finish
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       <button
         type="submit"
         disabled={!canSubmit}
@@ -498,16 +627,6 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
             : `Upload ${toUpload.length || ''} file${toUpload.length === 1 ? '' : 's'}`}
       </button>
 
-      {!busy && doneCount > 0 && toUpload.length === 0 && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-900 text-sm flex items-center justify-between gap-4">
-          <span>
-            {doneCount} file{doneCount === 1 ? '' : 's'} uploaded. Thank you!
-          </span>
-          <button type="button" onClick={clearDone} className="font-medium underline hover:text-emerald-700">
-            Upload more
-          </button>
-        </div>
-      )}
     </form>
   );
 }
