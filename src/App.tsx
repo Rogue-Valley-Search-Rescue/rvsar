@@ -394,6 +394,7 @@ export default function App() {
             <a href="#corsar" className="hover:text-white transition-colors text-sm">CORSAR</a>
             <a href="#join" className="hover:text-white transition-colors text-sm">Join</a>
             <a href={DONATION_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-sm">Donate</a>
+            <a href="/upload/" className="hover:text-white transition-colors text-sm">Upload</a>
           </div>
         </div>
       </footer>
