@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { ArrowLeft, Camera, CheckCircle2, Film, ImagePlus, Loader2, Lock, RotateCcw, Upload, X, XCircle } from 'lucide-react';
+import { ArrowLeft, Camera, CheckCircle2, Film, ImagePlus, Loader2, Lock, RotateCcw, ShieldCheck, Upload, X, XCircle } from 'lucide-react';
 
 // Google Apps Script web app URL (ends in /exec). Not a secret: the script
 // checks the password itself. See apps-script/README.md.
@@ -191,7 +191,7 @@ export default function UploadPage() {
           <h1 className="text-3xl font-bold text-emerald-950">Share Team Photos &amp; Videos</h1>
         </div>
         <p className="text-stone-600 mb-8">
-          Upload photos and videos from trainings, missions and events for use on RVSAR social media.
+          Upload photos and videos from trainings, missions, and events for use on RVSAR social media.
         </p>
 
         {!isConfigured && (
@@ -273,7 +273,7 @@ function PasscodeGate({ onUnlock, initialError }: { onUnlock: (code: string) => 
 function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPasscode: () => void }) {
   const [name, setName] = useState(() => storageGet(() => localStorage, NAME_KEY));
   const [event, setEvent] = useState('');
-  const [permission, setPermission] = useState(false);
+  const [permission, setPermission] = useState(true);
   const [items, setItems] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
   const [rejected, setRejected] = useState<string[]>([]);
@@ -457,16 +457,31 @@ function UploadForm({ passcode, onBadPasscode }: { passcode: string; onBadPassco
         </ul>
       )}
 
-      <label className="flex items-start gap-3 text-sm text-stone-700">
+      <label
+        className={`flex items-start gap-4 rounded-xl border-2 p-4 sm:p-5 cursor-pointer transition-colors ${
+          permission ? 'border-emerald-700 bg-emerald-50' : 'border-orange-500 bg-orange-50'
+        }`}
+      >
         <input
           type="checkbox"
           checked={permission}
           onChange={(e) => setPermission(e.target.checked)}
-          className="mt-0.5 h-4 w-4 accent-emerald-800"
+          className="mt-1 h-6 w-6 flex-shrink-0 cursor-pointer accent-emerald-800"
         />
-        <span>
-          I took these photos and videos (or have the photographer's permission) and RVSAR may post them on its
-          website and social media.
+        <span className="flex-1">
+          <span className="flex items-center gap-2 font-semibold text-emerald-950">
+            <ShieldCheck size={20} className={permission ? 'text-emerald-700' : 'text-orange-600'} />
+            Permission to share
+          </span>
+          <span className="mt-1 block text-base text-stone-800">
+            I took these photos and videos (or have the photographer's permission) and RVSAR may post them on its
+            website and social media.
+          </span>
+          {!permission && (
+            <span className="mt-2 block text-sm font-medium text-orange-700">
+              Permission is required to upload.
+            </span>
+          )}
         </span>
       </label>
 
